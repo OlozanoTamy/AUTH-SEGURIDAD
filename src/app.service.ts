@@ -1,3 +1,4 @@
+//A basic service with a single method.
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
