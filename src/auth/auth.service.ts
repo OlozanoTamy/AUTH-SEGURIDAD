@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "src/types/User";
 import { JwtService } from "@nestjs/jwt";
+import { access } from "fs";
 
 @Injectable()
 export class AuthService{
@@ -16,9 +17,9 @@ export class AuthService{
     }
 //No se quiere tener el password en texto plano
 //Ace esta la conexion con mongo
-    validateUser(usermane:string, password:string):any{
+    validateUser(username:string, password:string):any{
         console.log("AuthService Validate_User");
-        if(this.testUser.name===usermane && this.testUser.password===password){
+        if(this.testUser.name===username && this.testUser.password===password){
             return {
                 userId:this.testUser.id,
                 name:this.testUser.name,
@@ -26,16 +27,15 @@ export class AuthService{
             //no queremos retornar la passward
         }
     }
-
- login(user:User){
-    const payload = {
-        username:user.name,
-        sub: user.id
+    login(user: any) {
+        console.log("Login User:", user); // Log del usuario para depuración
+        const payload = {
+            id: user.userId,
+            name: user.name,
         };
+        console.log("Payload:", payload); // Log del payload para depuración
         return {
-            //Devuelve el token el metodo sign es la llave, payload
-            //Firmar el paylod y generar el token
-            access_token: this.jwtService.sign(payload)
+            access_token: this.jwtService.sign(payload),
+        };
     }
-}
 }

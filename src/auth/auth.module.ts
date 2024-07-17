@@ -3,16 +3,18 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
     imports:[
         PassportModule,
         JwtModule.register({
-            secret:"fgsdgsdJKJjjkjfkw48465186", //Por lo generar esta en variables de entorno, no Poner nada sencillo esto se hace .env
-            signOptions:{ expiresIn:"20s"}, //En cuanto expira el tiempo
+            secret:"P4l4br453cR3t4", //Por lo generar esta en variables de entorno, no Poner nada sencillo esto se hace .env
+            signOptions:{ expiresIn:"40s"}, //En cuanto expira el tiempo
         })
     ],
-    providers:[AuthService,LocalStrategy],
+    //Se importan las estrategia que se deben usar
+    providers:[AuthService,LocalStrategy,JwtStrategy],
     exports:[AuthService]
 })
 //Siempre se debe tener autenticacion de dos factores 

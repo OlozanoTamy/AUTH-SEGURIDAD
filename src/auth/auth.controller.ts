@@ -1,8 +1,9 @@
-import { Controller ,Request,Post,UseGuards } from "@nestjs/common";
+import { Controller ,Request,Post,UseGuards, Get } from "@nestjs/common";
 import { LocalAuthGuard } from "./strategies/local-auth.guard";
 import { AuthService } from "./auth.service";
+import { JwtAuthGuard } from "./strategies/jwt-auth.guard";
 
-@Controller("auth")
+@Controller()
 export class AuthController{
     constructor(private authService:AuthService){}
 
@@ -12,7 +13,8 @@ export class AuthController{
     //Es un decorator
     @UseGuards(LocalAuthGuard)
     //Solicitud HTPP -> Username y password
-    @Post("login")
+    @Post("auth/login")
+    //LA ruta de login no sirve para nada mas que para generarnos un tokken que nos identifique
     //funcion login
     //Aca se usa la funcion login que se creo en Services
     login(@Request() req){
@@ -21,6 +23,13 @@ export class AuthController{
         return this.authService.login(req.user)
         //Lo que da como resultado un tokken
         //El tokken no se puede decodificar sin la palabra secreta
+    }
+
+    //Chequea si el token que se envia es correcto
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    getProfile(@Request() req){
+        return req.user;
     }
 }
 
